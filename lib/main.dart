@@ -4,6 +4,7 @@ import 'pages/login.dart';
 import 'pages/home.dart';
 import 'pages/app.dart';
 import 'userdata.dart';
+
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
@@ -11,28 +12,6 @@ import 'package:flutter/cupertino.dart';
 
 SharedPreferences prefs;
 UserData user;
-
-void initState(){
-    _initializeUser();
-  }
-
-Future<void> _initializeUser() async{
-  UserData saveduser = await _getUserDataFromSharedPreferences();
-  log("User: " + saveduser.email + " - Password: " + saveduser.password + " - Logged: " + saveduser.logged.toString());
-  user = saveduser;
-}
-
-Future<UserData> _getUserDataFromSharedPreferences() async {
-  final prefs = await SharedPreferences.getInstance();
-  final useremail = prefs.getString("email");
-  final userpassword = prefs.getString("password");
-  final userlogged = prefs.getBool("logged");
-  if(useremail == null || userpassword == null || userlogged == null){
-    return UserData(email: "", password: "", logged: false);
-  }else{
-    return UserData(email: useremail, password: userpassword, logged: userlogged);
-  }
-}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

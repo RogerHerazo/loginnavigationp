@@ -14,7 +14,6 @@ class UserData extends ChangeNotifier{
     logged = l;
     notifyListeners();
     _savePreferences(e, p, l);
-    _printPreferences(); 
   }
 
   _savePreferences (String e, String p, bool l) async {
