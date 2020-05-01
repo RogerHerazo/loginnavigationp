@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:loginnavigation/userdata.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({Key key}) : super(key: key);
@@ -20,12 +24,15 @@ class LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Column(
+      child: Container(
+        margin: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(10.0),
+        color: Colors.grey,
+        child: Column(
         children: <Widget>[
               TextFormField(
                 controller: email,
                 decoration: InputDecoration(
-                border: InputBorder.none,
                 labelText: 'Enter your email'
               ),
                 validator: (value) {
@@ -38,7 +45,6 @@ class LoginFormState extends State<LoginForm> {
               TextFormField(
                 controller: password,
                 decoration: InputDecoration(
-                border: InputBorder.none,
                 labelText: 'Enter your password'
               ),
                 validator: (value) {
@@ -52,18 +58,46 @@ Consumer<UserData>(builder: (context, userdata, child){
   return RaisedButton(
   onPressed: () {
     if (_formKey.currentState.validate()) {
-      formatData(userdata, email.text, password.text);
+      //formatData(userdata, email.text.trim(), password.text.trim());
+      signIn(email: email.text.trim(), password: password.text.trim(), userdata: userdata);
     }
   },
   child: Text("Sign in"),
   );
 }),
         ]
-     )
+     ),
+      )
     );
   }
 }
 
-void formatData(UserData userData, String email, String password) {
-    userData.changeValue(email, password, true);
+void formatData(UserData userData, String email, String token, String name, String username) {
+    //log("Email: " + email + "Token: " + token + "Name: " + name + "Username: " + username);
+    userData.changeValue(email, token, true, name , username);
   }
+
+Future<UserData> signIn({String email, String password, UserData userdata}) async {
+    final http.Response response = await http.post(
+      'https://movil-api.herokuapp.com/signin',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'email': email,'password': password
+      }),
+    );
+
+    print('${response.body}');
+    print('${response.statusCode}');
+    if (response.statusCode == 200) {
+      print('${response.body}');
+      UserData userdataok = UserData.fromJson(json.decode(response.body));
+      formatData(userdata, "placeholder@placeholder.com", userdataok.token, userdataok.name, userdataok.username);
+    } else {
+      print("signup failed");
+      print('${response.body}');
+     throw Exception(response.body);
+    }
+  }
+

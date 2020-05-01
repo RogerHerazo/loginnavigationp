@@ -18,13 +18,13 @@ void main() async {
 
   prefs = await SharedPreferences.getInstance();
   final useremail = prefs.getString("email");
-  final userpassword = prefs.getString("password");
+  final usertoken = prefs.getString("token");
   final userlogged = prefs.getBool("logged");
-  log("User: " + useremail + " - Password: " + userpassword + " - Logged: " + userlogged.toString());
-  if(useremail == null || userpassword == null || userlogged == null){
-    user = new UserData(email: "", password: "", logged: false);
+  //log("User: " + useremail + " - Token: " + usertoken + " - Logged: " + userlogged.toString());
+  if(useremail == null || usertoken == null || userlogged == null){
+    user = new UserData(email: "", token: "", logged: false);
   }else{
-    user = new UserData(email: useremail, password: userpassword, logged: userlogged);
+    user = new UserData(email: useremail, token: usertoken, logged: userlogged);
   }
 
   runApp(MyApp());

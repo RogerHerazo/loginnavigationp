@@ -14,12 +14,10 @@ class Home extends StatelessWidget {
                return Column(          
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text(userdata.email),
-                            ],
-                          ),
+                              Text("Name: "+userdata.name),
+                              Text("Username: "+ userdata.username),
+                              Text("Email: "+ userdata.email),
+                              Text("Status: " + (userdata.logged ?"Logged":"Disconnected")),
                           RaisedButton(
                               onPressed: () {
                                 formatData(userdata, "", "");
@@ -27,7 +25,7 @@ class Home extends StatelessWidget {
                                 child: Text("Log out"),
                                 )
                             ],
-                            );
+                        );
                             }    
                       )
                 ),
@@ -35,6 +33,6 @@ class Home extends StatelessWidget {
   }
 }
 
-void formatData(UserData userData, String email, String password) {
-    userData.changeValue(email, password, false);
+void formatData(UserData userData, String email, String token) {
+    userData.changeValue("", "", false, "", "");
 }
