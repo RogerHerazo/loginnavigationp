@@ -118,6 +118,6 @@ Future<UserData> signUp({String email, String password, String username, String 
     } else {
       print("signup failed");
       print('${response.body}');
-     throw Exception(response.body);
+     //throw Exception(response.body);
     }
   }

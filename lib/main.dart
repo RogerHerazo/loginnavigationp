@@ -17,14 +17,16 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   prefs = await SharedPreferences.getInstance();
+  final name = prefs.getString("name");
+  final username = prefs.getString("username");
   final useremail = prefs.getString("email");
   final usertoken = prefs.getString("token");
   final userlogged = prefs.getBool("logged");
-  //log("User: " + useremail + " - Token: " + usertoken + " - Logged: " + userlogged.toString());
+  log("User: " + useremail + " - Token: " + usertoken + " - Logged: " + userlogged.toString());
   if(useremail == null || usertoken == null || userlogged == null){
-    user = new UserData(email: "", token: "", logged: false);
+    user = new UserData(email: "", token: "", logged: false,name: "", username: "");
   }else{
-    user = new UserData(email: useremail, token: usertoken, logged: userlogged);
+    user = new UserData(email: useremail, token: usertoken, logged: userlogged, name: name, username: username);
   }
 
   runApp(MyApp());
