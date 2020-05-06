@@ -9,9 +9,36 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 SharedPreferences prefs;
 UserData user;
+
+Future<bool> checkToken({String token}) async {
+    final http.Response response = await http.post(
+      'https://movil-api.herokuapp.com/check/token',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'token': token
+      }),
+    );
+    print('${response.body}');
+    print('${response.statusCode}');
+    if (response.statusCode == 200) {
+      if (response.body == '{"valid":true}') {
+        print("IsValid");
+        return true;
+      }else{
+        print("NotValid");
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,11 +49,15 @@ void main() async {
   final useremail = prefs.getString("email");
   final usertoken = prefs.getString("token");
   final userlogged = prefs.getBool("logged");
-  log("User: " + useremail + " - Token: " + usertoken + " - Logged: " + userlogged.toString());
-  if(useremail == null || usertoken == null || userlogged == null){
-    user = new UserData(email: "", token: "", logged: false,name: "", username: "");
+  //log("User: " + useremail + " - Token: " + usertoken + " - Logged: " + userlogged.toString());
+  if(useremail == null || usertoken == null || userlogged == null || name == null || username == null){
+    user = new UserData(email: "", token: "", logged: false, name: "", username: "");
   }else{
-    user = new UserData(email: useremail, token: usertoken, logged: userlogged, name: name, username: username);
+    if (await checkToken(token: usertoken.trim())) {
+      user = new UserData(email: useremail, token: usertoken, logged: userlogged, name: name, username: username);
+    }else{
+      user = new UserData(email: "", token: "", logged: false, name: "", username: "");
+    }
   }
 
   runApp(MyApp());

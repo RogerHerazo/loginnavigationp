@@ -19,9 +19,10 @@ class LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   final email = TextEditingController();
   final password = TextEditingController();
-
+  bool save = false;
   @override
   Widget build(BuildContext context) {
+    
     return Form(
       key: _formKey,
       child: Container(
@@ -54,27 +55,49 @@ class LoginFormState extends State<LoginForm> {
                   return null;
                 },
               ),
+              Row(children: <Widget>[
+                Checkbox(value: save, onChanged: (bool newvalue){
+                print(newvalue);
+                setState(() {
+                  save = newvalue;
+                });
+              },),
+                Text("Recuerdame")
+              ]),
 Consumer<UserData>(builder: (context, userdata, child){
   return RaisedButton(
   onPressed: () {
     if (_formKey.currentState.validate()) {
       //formatData(userdata, email.text.trim(), password.text.trim());
-      signIn(email: email.text.trim(), password: password.text.trim(), userdata: userdata);
-    }
-  },
-  child: Text("Sign in"),
-  );
-}),
-        ]
-     ),
-      )
-    );
-  }
+      userdata.setRemember(save);
+      signIn(email: email.text.trim(), password: password.text.trim(), userdata: userdata).then((user){}).catchError((error){
+        userdata.setLoading(false);
+              });
+              userdata.setLoading(true); 
+            }
+          },
+          child: Text("Sign in"),
+          );
+        }),
+                ]
+             ),
+              )
+            );
+          }
+        
+          Widget _buildDialog(BuildContext context, String error) {
+            showDialog(context: context,
+            builder: (context){
+              return AlertDialog(
+                content: new Text("Error "+ error)
+              );
+            });
+          }
 }
 
-void formatData(UserData userData, String email, String token, String name, String username) {
+void formatData(UserData userData, String email, String token, String name, String username, bool loading) {
     //log("Email: " + email + "Token: " + token + "Name: " + name + "Username: " + username);
-    userData.changeValue(email, token, true, name , username);
+    userData.changeValue(email, token, true, name , username, loading);
   }
 
 Future<UserData> signIn({String email, String password, UserData userdata}) async {
@@ -93,11 +116,11 @@ Future<UserData> signIn({String email, String password, UserData userdata}) asyn
     if (response.statusCode == 200) {
       print('${response.body}');
       UserData userdataok = UserData.fromJson(json.decode(response.body));
-      formatData(userdata, "placeholder@placeholder.com", userdataok.token, userdataok.name, userdataok.username);
+      formatData(userdata, email, userdataok.token, userdataok.name, userdataok.username, false);
     } else {
       print("signup failed");
       print('${response.body}');
-     throw Exception(response.body);
+     //throw Exception(response.body);
     }
   }
 
