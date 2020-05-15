@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:loginnavigation/models/courselistitem.dart';
+import 'package:loginnavigation/pages/coursedetail.dart';
 import 'package:loginnavigation/userdata.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -17,7 +18,7 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
-  var courses = new List<Course>();
+  var courses = new List<CourseLI>();
 
   _getCourses({String username, String token}) async {
     final http.Response response = await http.get(
@@ -31,7 +32,7 @@ class HomeState extends State<Home> {
     print('${response.statusCode}');
     setState(() {
       Iterable list = json.decode(response.body);
-      courses = list.map((model) => Course.fromJson(model)).toList();
+      courses = list.map((model) => CourseLI.fromJson(model)).toList();
       /* Course c = Course.fromJson(json.decode(response.body));
       courses.add(c); */
     });
@@ -50,7 +51,7 @@ class HomeState extends State<Home> {
     setState(() {
       /* Iterable list = json.decode(response.body);
       courses = list.map((model) => Course.fromJson(model)).toList(); */
-      Course c = Course.fromJson(json.decode(response.body));
+      CourseLI c = CourseLI.fromJson(json.decode(response.body));
       courses.add(c);
     });
   }
@@ -128,7 +129,17 @@ class HomeState extends State<Home> {
                             shrinkWrap: false,
                             itemCount: courses.length,
                             itemBuilder: (context,index){
-                            return ListTile(title: Text(courses[index].name));
+                            return ListTile(
+                              title: Text(courses[index].name),
+                              onTap: (){
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Coursedetail(course: courses[index], userdata: widget.userdata),
+                                  ),
+                                );    
+                              },
+                              );
                           })                         
                           )
                             ],
