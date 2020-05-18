@@ -32,6 +32,7 @@ _getStudentsDetail({String username, int, studentid, String token}) async {
       },
     );
     print('${response.statusCode}');
+    print('${response.body}');
     if(response.statusCode == 200){
       setState(() {
         studentd = Student.fromJson(json.decode(response.body));
@@ -49,36 +50,42 @@ _getStudentsDetail({String username, int, studentid, String token}) async {
 
   @override
   Widget build(BuildContext context) {
+      var textstyle = TextStyle(
+      fontSize: 20,
+      foreground: Paint()
+          ..style = PaintingStyle.fill 
+          ..strokeWidth = 0.5
+          ..color = Colors.black
+    );
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home"),
+        title: Text("Student"),
       ),
       body: Center(
-                child:studentd != null?Column(
-                 mainAxisAlignment: MainAxisAlignment.start,
+                child:studentd != null?Container(
+                  width: double.infinity,
+                  color: Colors.purple[50],
+                  child:Flex(
+                 direction: Axis.vertical,
+                 mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                            Flexible(
-                              flex:1,
-                              child: Container(
-                                child:Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    Text("CourseId: "+ studentd.courseId.toString()),
-                                    Text("Name: "+ studentd.name),
-                                    Text("Email: "+ studentd.email),
-                                    Text("Username: "+ studentd.username),
-                                    Text("Phone: "+ studentd.phone),
-                                    Text("City: "+ studentd.city),
-                                    Text("Country: "+ studentd.country),
-                                    Text("Birthday: "+ new DateFormat("dd-MM-yyyy").format(DateTime.parse(studentd.birthday))),
+                                    Expanded(child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      children: <Widget>[
+                                        Text("CourseId: "+ studentd.courseId.toString(), style: textstyle),
+                                        Text("Name: "+ studentd.name, style: textstyle),
+                                        Text("Email: "+ studentd.email, style: textstyle),
+                                        Text("Username: "+ studentd.username, style: textstyle),
+                                        Text("Phone: "+ studentd.phone, style: textstyle),
+                                        Text("City: "+ studentd.city, style: textstyle),
+                                        Text("Country: "+ studentd.country, style: textstyle),
+                                        Text("Birthday: "+ new DateFormat("dd-MM-yyyy").format(DateTime.parse(studentd.birthday)), style: textstyle),
+                                      ],
+                                    ))
                                     
-                            ]))),
-                          ]),
                             ],
-                        ):CircularProgressIndicator()   
+                        )
+                ):CircularProgressIndicator()   
                 )
     );
   }

@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:loginnavigation/models/courselistitem.dart';
-import 'package:loginnavigation/models/student.dart';
 import 'package:loginnavigation/models/course.dart';
+import 'package:loginnavigation/pages/professordetail.dart';
 import 'studentdetail.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -36,7 +36,7 @@ class CoursedetailState extends State<Coursedetail> {
     print('${response.statusCode}');
     if(response.statusCode == 200){
       setState(() {
-        Course coursedtl = Course.fromJson(json.decode(response.body));
+        coursedtl = Course.fromJson(json.decode(response.body));
         students = coursedtl.students;
         print(coursedtl.professor.toString());
       });
@@ -53,9 +53,10 @@ class CoursedetailState extends State<Coursedetail> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home"),
+        title: Text("Course"),
       ),
       body: Center(
                 child:Column(
@@ -70,10 +71,34 @@ class CoursedetailState extends State<Coursedetail> {
                                 child:Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: <Widget>[
-                                    Text("Id: "+widget.course.id.toString()),
-                                    Text("Name: "+widget.course.name),
-                                    Text("Profesor: "+ widget.course.professor),
-                                    Text("Students: "+ widget.course.students.toString()),
+                                    Text(widget.course.name,
+                                    style: TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                    ),),
+                                    GestureDetector(
+                                      child: Container(
+                                      margin: const EdgeInsets.all(10.0),
+                                      color: Colors.purple[100],
+                                      child: Text(coursedtl.professor == null? "Loading...": coursedtl.professor.name, 
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    ),
+                                    ),
+                                    onTap: (){
+                                      if(coursedtl.professor != null){
+                                        Navigator.push(
+                                        context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Professordetail(professor: coursedtl.professor),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    )
+                                    
                             ]))),
                           ]),
                           Expanded(

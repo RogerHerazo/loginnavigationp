@@ -70,7 +70,21 @@ class MyApp extends StatelessWidget {
             child: MaterialApp(
               title: 'Login Navigation',
               theme: ThemeData(
-                primarySwatch: Colors.blue,
+                primarySwatch: Colors.deepPurple,
+                accentColor: Colors.orange,
+                cursorColor: Colors.orange,
+                textTheme: TextTheme(
+                  display2: TextStyle(
+                    fontFamily: 'OpenSans',
+                    fontSize: 45.0,
+                    color: Colors.orange,
+                  ),
+                  button: TextStyle(
+                    fontFamily: 'OpenSans',
+                  ),
+                  subhead: TextStyle(fontFamily: 'NotoSans'),
+                  body1: TextStyle(fontFamily: 'NotoSans'),
+                ),
               ),
               home: App(),
               routes: <String, WidgetBuilder> {

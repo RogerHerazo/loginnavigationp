@@ -52,7 +52,9 @@ class HomeState extends State<Home> {
       /* Iterable list = json.decode(response.body);
       courses = list.map((model) => Course.fromJson(model)).toList(); */
       CourseLI c = CourseLI.fromJson(json.decode(response.body));
-      courses.add(c);
+      if (c!= null) {
+        courses.add(c);
+      }
     });
   }
 
@@ -83,46 +85,46 @@ class HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    var textstyle = TextStyle(
+      fontSize: 20,
+      foreground: Paint()
+          ..style = PaintingStyle.fill 
+          ..strokeWidth = 0.5
+          ..color = Colors.black
+    );
     return Scaffold(
       appBar: AppBar(
         title: Text("Home"),
       ),
       body: Center(
                 child:Column(
-                 mainAxisAlignment: MainAxisAlignment.start,
+                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                            Flexible(
-                              flex:1,
-                              child: Container(
+                            Container(
                                 child:Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: <Widget>[
-                                    Text("Name: "+widget.userdata.name),
-                                    Text("Username: "+ widget.userdata.username),
-                                    Text("Email: "+ widget.userdata.email),
-                                    Text("Status: " + (widget.userdata.logged ?"Logged":"Disconnected")),
-                            ]))),
-                            Flexible(
-                              flex:1,
-                              child: RaisedButton(
+                                    Text("Name: "+widget.userdata.name, style: textstyle),
+                                    Text("Username: "+ widget.userdata.username, style: textstyle),
+                                    Text("Email: "+ widget.userdata.email, style: textstyle),
+                                    Text("Status: " + (widget.userdata.logged ?"Logged":"Disconnected"), style: textstyle),
+                            ])),
+                            RaisedButton(
                               onPressed: () {
                                 formatData(widget.userdata, "", "");
                                 },
                                 child: Text("Log out"),
                                 ),
-                            ),
-                            Flexible(
-                              flex:1,
-                              child: RaisedButton(
+                            RaisedButton(
                               onPressed: () {
                                 _deleteDB(username: widget.userdata.username, token: widget.userdata.token);
                                 },
                                 child: Text("Delete DB"),
                                 ),
-                            ),
                           ]),
                           Expanded(
                             child:ListView.builder(
