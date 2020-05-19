@@ -38,7 +38,6 @@ class CoursedetailState extends State<Coursedetail> {
       setState(() {
         coursedtl = Course.fromJson(json.decode(response.body));
         students = coursedtl.students;
-        print(coursedtl.professor.toString());
       });
     }else{
       Navigator.pop(context);
@@ -92,7 +91,7 @@ class CoursedetailState extends State<Coursedetail> {
                                         Navigator.push(
                                         context,
                                           MaterialPageRoute(
-                                            builder: (context) => Professordetail(professor: coursedtl.professor),
+                                            builder: (context) => Professordetail(professor: coursedtl.professor, userdata: widget.userdata),
                                           ),
                                         );
                                       }

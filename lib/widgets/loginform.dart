@@ -85,7 +85,7 @@ Consumer<UserData>(builder: (context, userdata, child){
             );
           }
         
-          Widget _buildDialog(BuildContext context, String error) {
+          void _buildDialog(BuildContext context, String error) {
             showDialog(context: context,
             builder: (context){
               return AlertDialog(
@@ -98,6 +98,29 @@ Consumer<UserData>(builder: (context, userdata, child){
 void formatData(UserData userData, String email, String token, String name, String username, bool loading) {
     //log("Email: " + email + "Token: " + token + "Name: " + name + "Username: " + username);
     userData.changeValue(email, token, true, name , username, loading);
+  }
+
+void _showDialog(BuildContext context) {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Alert Dialog title"),
+          content: new Text("Alert Dialog body"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
 Future<UserData> signIn({String email, String password, UserData userdata}) async {
@@ -120,7 +143,7 @@ Future<UserData> signIn({String email, String password, UserData userdata}) asyn
     } else {
       print("signup failed");
       print('${response.body}');
-     //throw Exception(response.body);
+      throw Exception(response.body);
     }
   }
 

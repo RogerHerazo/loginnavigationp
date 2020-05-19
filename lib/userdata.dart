@@ -28,13 +28,17 @@ class UserData extends ChangeNotifier{
           }
         }
       
-        void setLoading(bool l){
-          loading = l;
+        void setLoading(bool lo){
+          loading = lo;
           notifyListeners();
         }
       
         void setRemember(bool r) async {
           remember = r;
+        }
+
+        void setLogged(bool l){
+          logged = l;
         }
       
         _savePreferences (String e, String t, bool l, String n, String u) async {
